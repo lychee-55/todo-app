@@ -24,6 +24,7 @@ initialState['nextID'] = count;
 // action type에 대한 상수 설정
 const CREATE = 'todo/CREATE';
 const DONE = 'todo/DONE';
+const EDIT = 'todo/EDIT'; // 텍스트 수정
 
 // components에서 사용될 액션 반환 함수
 export function create(payload) {
@@ -36,6 +37,12 @@ export function done(id) {
   return {
     type: DONE,
     id: id, // id: number
+  };
+}
+export function edit(payload) {
+  return {
+    type: EDIT,
+    payload, // { id: number, text: string }
   };
 }
 
@@ -70,6 +77,17 @@ export function todoReducer(state = initialState, action) {
           } else return todo;
         }),
       };
+
+    case EDIT:
+      return {
+        ...state,
+        list: state.list.map(todo =>
+          todo.id === action.payload.id
+            ? { ...todo, text: action.payload.text } // 텍스트 업데이트
+            : todo,
+        ),
+      };
+
     default:
       return state;
   }

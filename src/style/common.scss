@@ -14,11 +14,11 @@ $color-orange: #d58031;
 // $color-yg: #bdc4a7;
 // $color-w: #f3f9d2;
 // $color-brown: #93827f;
-* {
-  // color: $color-black;
-  // border: 1px solid black;
-  // background-color: $color-white;
-}
+// * {
+//   // color: $color-black;
+//   // border: 1px solid black;
+//   // background-color: $color-white;
+// }
 
 .background-section {
   width: 100%; /* 전체 화면 너비 */
@@ -104,6 +104,16 @@ section {
           white-space: normal; /* hover 시 줄 바꿈 허용 */
           text-overflow: unset; /* hover 시 '...' 제거 */
         }
+        .editBtn {
+          visibility: visible;
+          color: $color-brown-shadow;
+          background-color: $color-yellow;
+        }
+      }
+      .editBtn {
+        visibility: hidden;
+        border: 2px solid $color-yellow;
+        color: $color-green;
       }
 
       > button {
