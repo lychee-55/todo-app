@@ -1,21 +1,5 @@
 const initialState = {
-  list: [
-    {
-      id: 0,
-      text: '리액트 공부하기',
-      done: false, // done: false는 할 일 목록
-    },
-    {
-      id: 1,
-      text: '척추의 요정이 말합니다! 척추 펴기!',
-      done: true, // done: true 는 완료 목록
-    },
-    {
-      id: 2,
-      text: '운동하기',
-      done: false,
-    },
-  ],
+  list: [],
 };
 
 const count = initialState.list.length; //3
@@ -24,6 +8,8 @@ initialState['nextID'] = count;
 // action type에 대한 상수 설정
 const CREATE = 'todo/CREATE';
 const DONE = 'todo/DONE';
+const INIT = 'todo/INIT';
+
 const EDIT = 'todo/EDIT'; // 텍스트 수정
 
 // components에서 사용될 액션 반환 함수
@@ -39,6 +25,14 @@ export function done(id) {
     id: id, // id: number
   };
 }
+// data:{id,text,done}[]
+export function init(data) {
+  return {
+    type: INIT,
+    data: data,
+  };
+}
+
 export function edit(payload) {
   return {
     type: EDIT,
@@ -48,6 +42,16 @@ export function edit(payload) {
 
 export function todoReducer(state = initialState, action) {
   switch (action.type) {
+    case INIT:
+      return {
+        ...state,
+        list: action.data,
+        nextID:
+          action.data.length === 0
+            ? 1
+            : action.data[action.data.length - 1].id + 1,
+      };
+
     case CREATE:
       if (action.payload.text.trim() === '') return state;
       console.log('CREATE 호출됨', action);

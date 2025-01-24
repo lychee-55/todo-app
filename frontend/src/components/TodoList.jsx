@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useDispatch, useSelector } from 'react-redux';
 import { create, done, edit } from '../store/modules/todo';
 import { useEffect, useRef, useState } from 'react';
+import axios from 'axios';
 
 export default function TodoList() {
   // useSelector()를 통해서 store의 state를 가져올 수 있음.
@@ -18,10 +19,28 @@ export default function TodoList() {
   const nextID = useSelector(state => state.todo.nextID);
   console.log('nextID>>', nextID);
 
-  const createTodo = () => {
+  /* 할 일 추가 POST /todo */
+  const createTodo = async () => {
+    if (inputRef.current.value.trim() === '') return;
+    // state를 변경해서 화면을 바꾸는 것 = dispatch
     dispatch(create({ id: nextID, text: inputRef.current.value }));
+
+    // DB 정보를 바꾸기 위해서 axios 요청
+    await axios.post(`${process.env.REACT_APP_API_SERVER}/todo`, {
+      text: inputRef.current.value,
+    });
+
     inputRef.current.value = '';
     inputRef.current.focus();
+  };
+
+  /* todo의 상태 변경 PATCH /todo/:todoId */
+  const toDone = async id => {
+    // state를 변경해서 화면을 바꾸는 것
+    dispatch(done(id));
+
+    // DB 정보를 바꾸기 위해 axios 요청
+    await axios.patch(`${process.env.REACT_APP_API_SERVER}/todo/${id}`);
   };
 
   const enterTodo = e => {
@@ -30,7 +49,6 @@ export default function TodoList() {
   };
 
   // 수정하기
-
   const [editingId, setEditingId] = useState(null); // 수정 중인 todo의 ID
   const [editingText, setEditingText] = useState(''); // 수정 중인 텍스트
 
@@ -92,7 +110,7 @@ export default function TodoList() {
               ) : (
                 // 기본 상태
                 <>
-                  <button onClick={() => dispatch(done(todo.id))}>
+                  <button onClick={toDone}>
                     <FontAwesomeIcon icon={faCheck} className="icon-check" />
                   </button>
                   <span className="text">{todo.text}</span>
