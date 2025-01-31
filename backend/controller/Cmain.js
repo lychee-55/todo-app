@@ -62,3 +62,32 @@ exports.patchDoneState = async (req, res) => {
 
 /* 실습문제 */
 // 수정, 삭제에 대한 API
+exports.deleteTodo = async (req, res) => {
+  try {
+    const { todoId } = req.params;
+    const isDeleted = await Todo.destroy({ where: { id: todoId } });
+    Boolean(isDeleted)
+      ? res.send({ isSuccess: true })
+      : res.send({ isSuccess: false });
+  } catch (err) {
+    console.log('server err!', err);
+    res.status(500).send('Server Err!!');
+  }
+};
+
+exports.patchContent = async (req, res) => {
+  // {id,text} = req.body
+  try {
+    const { id, text } = req.body;
+    const [isUpdated] = await Todo.update(
+      { text: text },
+      { where: { id: id } },
+    );
+    Boolean(isUpdated)
+      ? res.send({ isSuccess: true })
+      : res.send({ isSuccess: false });
+  } catch (err) {
+    console.log('server!err!', err);
+    res.status(500).send('SERBER ERROR!');
+  }
+};

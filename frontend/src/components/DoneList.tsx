@@ -1,7 +1,8 @@
 import { useSelector } from 'react-redux';
+import { ReduxState } from 'types/types';
 
 export default function DoneList() {
-  let doneList = useSelector(state => state.todo.list).filter(
+  const doneList = useSelector((state: ReduxState) => state.todo.list).filter(
     todo => todo.done === true,
   );
   return (
